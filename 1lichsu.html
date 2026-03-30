@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lịch Sử Đặt Tour – VietnamTravel</title>
+<link rel="stylesheet" href="2bass.css">
+<link rel="stylesheet" href="2nav.css">
+<link rel="stylesheet" href="2home.css">
+<style>
+/* ===== PAGE ===== */
+.ls-page { max-width: 860px; margin: 0 auto; padding: 32px 20px 80px; }
+.ls-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: var(--muted); margin-bottom: 24px; }
+.ls-breadcrumb a { color: var(--green); text-decoration: none; font-weight: 500; }
+.ls-breadcrumb svg { width: 16px; height: 16px; }
+.ls-title { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 900; color: var(--dark); margin-bottom: 8px; }
+.ls-subtitle { font-size: 0.88rem; color: var(--muted); margin-bottom: 28px; line-height: 1.5; }
+
+/* ===== TABS ===== */
+.ls-tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+.ls-tab { background: white; border: 1.5px solid #e0e0e0; color: var(--text); padding: 8px 20px; border-radius: 8px; font-family: 'Be Vietnam Pro', sans-serif; font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: all .2s; }
+.ls-tab:hover { border-color: var(--green); color: var(--green); }
+.ls-tab.active { background: var(--green); color: white; border-color: var(--green); font-weight: 600; }
+
+/* ===== BOOKING CARD ===== */
+.ls-card { background: white; border-radius: 16px; box-shadow: 0 2px 16px rgba(0,0,0,0.06); margin-bottom: 16px; overflow: hidden; transition: box-shadow .2s; }
+.ls-card:hover { box-shadow: 0 6px 28px rgba(0,0,0,0.1); }
+.ls-card-inner { display: flex; align-items: stretch; padding: 20px; gap: 18px; }
+.ls-thumb { width: 120px; height: 90px; border-radius: 10px; overflow: hidden; flex-shrink: 0; }
+.ls-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.ls-thumb-bg { width: 100%; height: 100%; background-size: cover; background-position: center; }
+.ls-info { flex: 1; min-width: 0; }
+.ls-status-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.ls-status { font-size: 0.68rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 3px 10px; border-radius: 6px; }
+.ls-status.sapdi { background: #fff3cd; color: #856404; }
+.ls-status.hoanthanh { background: #d1f2e4; color: #155c30; }
+.ls-status.dahuy { background: #fde8e8; color: #c0392b; }
+.ls-booking-id { font-size: 0.75rem; color: var(--muted); font-weight: 500; }
+.ls-tour-name { font-weight: 700; font-size: 1rem; color: var(--dark); margin-bottom: 10px; line-height: 1.4; }
+.ls-meta { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.ls-meta-item { display: flex; align-items: center; gap: 5px; font-size: 0.78rem; color: var(--muted); }
+.ls-meta-item svg { width: 13px; height: 13px; flex-shrink: 0; }
+.ls-cancel-note { font-size: 0.78rem; color: #e53935; font-weight: 500; margin-top: 6px; }
+.ls-right { display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; flex-shrink: 0; min-width: 140px; }
+.ls-price-label { font-size: 0.7rem; color: var(--muted); text-align: right; margin-bottom: 2px; }
+.ls-price { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 900; color: var(--dark); text-align: right; }
+.ls-price.huy { color: #aaa; }
+.ls-price-note { font-size: 0.68rem; color: var(--muted); text-align: right; margin-top: 1px; }
+.ls-actions { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; margin-top: 10px; }
+.ls-btn { font-family: 'Be Vietnam Pro', sans-serif; font-size: 0.78rem; font-weight: 600; padding: 8px 16px; border-radius: 8px; cursor: pointer; border: none; transition: all .2s; white-space: nowrap; }
+.ls-btn.primary { background: var(--green); color: white; }
+.ls-btn.primary:hover { background: var(--green-light); }
+.ls-btn.outline { background: none; border: 1.5px solid #ddd; color: var(--text); }
+.ls-btn.outline:hover { border-color: var(--green); color: var(--green); }
+.ls-btn.text { background: none; border: none; color: var(--muted); font-size: 0.76rem; padding: 0; }
+.ls-btn.text:hover { color: var(--dark); }
+
+/* ===== LOAD MORE ===== */
+.ls-load-more { display: flex; justify-content: center; margin-top: 24px; }
+.ls-load-btn { background: white; border: 1.5px solid #ddd; color: var(--text); font-family: 'Be Vietnam Pro', sans-serif; font-weight: 600; font-size: 0.875rem; padding: 12px 28px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all .2s; }
+.ls-load-btn:hover { border-color: var(--green); color: var(--green); }
+
+/* ===== EMPTY ===== */
+.ls-empty { text-align: center; padding: 60px 20px; }
+.ls-empty-icon { font-size: 3rem; margin-bottom: 16px; }
+.ls-empty p { color: var(--muted); font-size: 0.9rem; }
+</style>
+</head>
+<body>
+
+<div class="ls-page">
+
+  <!-- Breadcrumb -->
+  <div class="ls-breadcrumb">
+    <a href="1canhan.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 5l-7 7 7 7"/></svg>
+    </a>
+    <a href="1canhan.html">Lịch sử đặt tour</a>
+  </div>
+
+  <h1 class="ls-title">Lịch sử đặt tour</h1>
+  <p class="ls-subtitle">Quản lý các hành trình khám phá của bạn. Từ những kỷ niệm đã qua đến những chuyến đi đầy mong đợi phía trước.</p>
+
+  <!-- Tabs -->
+  <div class="ls-tabs">
+    <button class="ls-tab active" onclick="filterTab('tatca', this)">Tất cả</button>
+    <button class="ls-tab" onclick="filterTab('sapdi', this)">Sắp đi</button>
+    <button class="ls-tab" onclick="filterTab('hoanthanh', this)">Đã hoàn thành</button>
+    <button class="ls-tab" onclick="filterTab('dahuy', this)">Đã hủy</button>
+  </div>
+
+  <!-- Booking list -->
+  <div id="bookingList"></div>
+
+  <!-- Load more -->
+  <div class="ls-load-more" id="loadMoreWrap">
+    <button class="ls-load-btn" onclick="loadMore()">
+      Xem thêm chuyến đi
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="footer-logo">
+        <div class="footer-logo-icon"></div>
+        <span class="footer-logo-text">Vietnam<span>Travel</span></span>
+      </div>
+      <p class="footer-desc">Trải nghiệm du lịch cao cấp tại Đông Nam Á. Chúng tôi cung cấp những dịch vụ lữ hành kết nối bạn với sắc phong phú, văn hóa đa dạng và cảnh quan tuyệt đẹp của miền Việt Nam.</p>
+      <div class="footer-social">
+        <div class="social-btn">f</div><div class="social-btn">in</div><div class="social-btn">yt</div>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Về chúng tôi</h4>
+      <ul><li><a href="#">Câu chuyện thương hiệu</a></li><li><a href="#">Đối tác kinh doanh</a></li><li><a href="#">Cơ hội nghề nghiệp</a></li><li><a href="#">Tin tức & sự kiện</a></li></ul>
+    </div>
+    <div class="footer-col">
+      <h4>Hỗ trợ khách hàng</h4>
+      <ul><li><a href="#">Trung tâm trợ giúp</a></li><li><a href="#">Chính sách bảo hộ</a></li><li><a href="#">Điều khoản dịch vụ</a></li><li><a href="#">Hướng dẫn đặt tour</a></li></ul>
+    </div>
+    <div class="footer-newsletter">
+      <h4>Bản tin</h4>
+      <p>Đăng ký để nhận các ưu đãi hấp dẫn và tin tức du lịch mới nhất mỗi tuần.</p>
+      <div class="newsletter-form">
+        <input type="email" placeholder="Email của bạn...">
+        <button>➤</button>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2024 VIETNAM TRAVEL. ALL RIGHTS RESERVED. DESIGNED WITH ❤️ FOR VIETNAM.</p>
+    <div class="footer-bottom-links"><a href="#">Chính sách bảo mật</a><a href="#">Điều khoản & điều kiện</a></div>
+  </div>
+</footer>
+
+<script src="3data.js"></script>
+<script src="3nav.js"></script>
+<script>
+// Đọc bookings sau khi 3data.js đã load
+(function loadBookings() {
+  try {
+    var u = typeof loadUser === 'function' ? loadUser() : null;
+    if (u && u.email) {
+      var raw = localStorage.getItem('vt_bookings_' + u.email) || '[]';
+      var saved = JSON.parse(raw);
+      var statusMap = { upcoming:'sapdi', completed:'hoanthanh', cancelled:'dahuy' };
+      var labelMap  = { upcoming:'Sắp đi', completed:'Đã hoàn thành', cancelled:'Đã hủy' };
+      BOOKINGS = saved.map(function(b) {
+        var st = statusMap[b.status] || 'sapdi';
+        return {
+          id:          b.code,
+          status:      st,
+          statusLabel: labelMap[b.status] || 'Sắp đi',
+          name:        b.tourName || 'Tour du lịch',
+          img:         b.imgKey   || 'halong.jpg',
+          date:        b.date     || '—',
+          guests:      b.guests   || '—',
+          price:       b.total    || '—',
+          priceLabel:  'Tổng thanh toán',
+          actions:     st === 'sapdi' ? ['cancel','detail'] : st === 'hoanthanh' ? ['detail'] : ['detail-cancel']
+        };
+      });
+    }
+  } catch(e) {}
+  renderList();
+})();
+// Lấy bookings từ localStorage theo đúng key mà 3booking.js lưu
+let BOOKINGS = [];
+try {
+  var u = typeof loadUser === 'function' ? loadUser() : null;
+  if (u && u.email) {
+    var raw = localStorage.getItem('vt_bookings_' + u.email) || '[]';
+    var saved = JSON.parse(raw);
+    // Map field names sang format hiển thị
+    BOOKINGS = saved.map(function(b) {
+      var statusMap = { upcoming: 'sapdi', completed: 'hoanthanh', cancelled: 'dahuy' };
+      var labelMap  = { upcoming: 'Sắp đi', completed: 'Đã hoàn thành', cancelled: 'Đã hủy' };
+      var st = statusMap[b.status] || 'sapdi';
+      return {
+        id:          b.code,
+        status:      st,
+        statusLabel: labelMap[b.status] || 'Sắp đi',
+        name:        b.tourName || 'Tour du lịch',
+        img:         b.imgKey   || 'halong.jpg',
+        date:        b.date     || '—',
+        guests:      b.guests   || '—',
+        price:       b.total    || '—',
+        priceLabel:  'Tổng thanh toán',
+        actions:     st === 'sapdi' ? ['cancel','detail'] : st === 'hoanthanh' ? ['detail'] : ['detail-cancel']
+      };
+    });
+  }
+} catch(e) { BOOKINGS = []; }
+
+let currentFilter = 'tatca';
+let visibleCount = 3;
+
+function filterTab(tab, btn) {
+  currentFilter = tab;
+  visibleCount = 3;
+  document.querySelectorAll('.ls-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  renderList();
+}
+
+function getFiltered() {
+  if (currentFilter === 'tatca') return BOOKINGS;
+  return BOOKINGS.filter(b => b.status === currentFilter);
+}
+
+function renderList() {
+  const list = document.getElementById('bookingList');
+  const loadWrap = document.getElementById('loadMoreWrap');
+  const filtered = getFiltered();
+  const visible = filtered.slice(0, visibleCount);
+
+  if (visible.length === 0) {
+    list.innerHTML = `<div class="ls-empty"><div class="ls-empty-icon">🗺️</div><p>Chưa có chuyến đi nào trong mục này.</p></div>`;
+    loadWrap.style.display = 'none';
+    return;
+  }
+
+  list.innerHTML = visible.map(b => buildCard(b)).join('');
+  loadWrap.style.display = visibleCount < filtered.length ? 'flex' : 'none';
+}
+
+function buildCard(b) {
+  const statusMap = { sapdi:'sapdi', hoanthanh:'hoanthanh', dahuy:'dahuy' };
+  const imgStyle = b.img.startsWith('http')
+    ? `background:url('${b.img}') center/cover`
+    : `background:url('${b.img}') center/cover`;
+
+  let metaHtml = `
+    <div class="ls-meta-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Khởi hành: ${b.date}
+    </div>
+    <div class="ls-meta-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      ${b.guests}
+    </div>`;
+
+  if (b.completed) metaHtml += `<div class="ls-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Hoàn thành: ${b.completed}</div>`;
+
+  let cancelNote = '';
+  if (b.cancelDate) cancelNote = `<div class="ls-cancel-note">Đã hủy ngày ${b.cancelDate}</div>`;
+
+  let actionsHtml = '';
+  if (b.actions.includes('cancel'))        actionsHtml += `<button class="ls-btn outline" onclick="cancelBooking('${b.id}')">Hủy tour</button>`;
+  if (b.actions.includes('detail'))        actionsHtml += `<button class="ls-btn primary" onclick="window.location.href='1chitietdat.html?id=${b.id}'">Xem chi tiết</button>`;
+  if (b.actions.includes('detail-cancel')) actionsHtml += `<button class="ls-btn text" onclick="window.location.href='1chitietdat.html?id=${b.id}'">Chi tiết hủy</button>`;
+
+  return `
+  <div class="ls-card" data-status="${b.status}">
+    <div class="ls-card-inner">
+      <div class="ls-thumb">
+        <div class="ls-thumb-bg" style="${imgStyle}"></div>
+      </div>
+      <div class="ls-info">
+        <div class="ls-status-row">
+          <span class="ls-status ${statusMap[b.status]}">${b.statusLabel}</span>
+          <span class="ls-booking-id">#${b.id}</span>
+        </div>
+        <div class="ls-tour-name">${b.name}</div>
+        <div class="ls-meta">${metaHtml}</div>
+        ${cancelNote}
+      </div>
+      <div class="ls-right">
+        <div>
+          <div class="ls-price-label">${b.priceLabel}</div>
+          <div class="ls-price ${b.status === 'dahuy' ? 'huy' : ''}">${b.price}</div>
+        </div>
+        <div class="ls-actions">${actionsHtml}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function loadMore() {
+  visibleCount += 3;
+  renderList();
+}
+
+function cancelBooking(id) {
+  if (!confirm('Bạn chắc chắn muốn hủy tour này?')) return;
+  const idx = BOOKINGS.findIndex(b => b.id === id);
+  if (idx !== -1) {
+    BOOKINGS[idx].status = 'dahuy';
+    BOOKINGS[idx].statusLabel = 'Đã hủy';
+    BOOKINGS[idx].cancelDate = new Date().toLocaleDateString('vi-VN');
+    BOOKINGS[idx].actions = ['detail-cancel'];
+    BOOKINGS[idx].priceLabel = 'Hoàn tiền';
+  }
+  renderList();
+}
+
+// Footer CSS đã load từ 2home.css
+</script>
+</body>
+</html>

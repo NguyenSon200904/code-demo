@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chi Tiết Đặt Tour – VietnamTravel</title>
+<link rel="stylesheet" href="2bass.css">
+<link rel="stylesheet" href="2nav.css">
+<link rel="stylesheet" href="2home.css">
+<style>
+.cd-page { max-width: 1100px; margin: 0 auto; padding: 28px 20px 80px; }
+
+/* BREADCRUMB */
+.cd-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: var(--muted); margin-bottom: 20px; }
+.cd-breadcrumb a { color: var(--muted); text-decoration: none; }
+.cd-breadcrumb a:hover { color: var(--green); }
+.cd-breadcrumb .sep { color: #ccc; }
+
+/* HEADER */
+.cd-header { margin-bottom: 20px; }
+.cd-booking-id { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: var(--dark); margin-bottom: 10px; }
+.cd-meta-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.cd-status { font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 4px 12px; border-radius: 6px; }
+.cd-status.sapdi    { background: #fff3cd; color: #856404; }
+.cd-status.hoanthanh{ background: #d1f2e4; color: #155c30; }
+.cd-status.dahuy    { background: #fde8e8; color: #c0392b; }
+.cd-date-text { font-size: 0.82rem; color: var(--muted); }
+
+/* ACTION BUTTONS */
+.cd-actions { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
+.cd-action-btn { display: flex; align-items: center; gap: 7px; padding: 9px 18px; border-radius: 8px; font-family: 'Be Vietnam Pro', sans-serif; font-size: 0.82rem; font-weight: 600; cursor: pointer; border: 1.5px solid #ddd; background: white; color: var(--text); transition: all .2s; }
+.cd-action-btn:hover { border-color: var(--green); color: var(--green); }
+.cd-action-btn.danger { border-color: #e53935; color: #e53935; }
+.cd-action-btn.danger:hover { background: #e53935; color: white; }
+.cd-action-btn svg { width: 14px; height: 14px; }
+
+/* LAYOUT */
+.cd-layout { display: grid; grid-template-columns: 1fr 340px; gap: 24px; align-items: start; }
+
+/* LEFT */
+.cd-hero { border-radius: 16px; overflow: hidden; position: relative; height: 260px; margin-bottom: 20px; }
+.cd-hero-img { width: 100%; height: 100%; background-size: cover; background-position: center; }
+.cd-hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 50%); }
+.cd-hero-title { position: absolute; bottom: 20px; left: 20px; color: white; font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; text-shadow: 0 2px 8px rgba(0,0,0,0.5); }
+
+.cd-info-bar { display: flex; gap: 0; background: white; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); overflow: hidden; margin-bottom: 20px; }
+.cd-info-item { flex: 1; padding: 16px 20px; border-right: 1px solid #f0f0f0; display: flex; align-items: center; gap: 10px; }
+.cd-info-item:last-child { border-right: none; }
+.cd-info-item svg { width: 18px; height: 18px; color: var(--green); flex-shrink: 0; }
+.cd-info-label { font-size: 0.7rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+.cd-info-val { font-size: 0.88rem; font-weight: 600; color: var(--dark); }
+
+/* ITINERARY */
+.cd-card { background: white; border-radius: 14px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); padding: 22px 24px; }
+.cd-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.cd-card-header h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--dark); }
+.cd-card-header a { font-size: 0.8rem; color: var(--green); text-decoration: none; font-weight: 600; }
+.cd-itinerary { display: flex; flex-direction: column; gap: 0; }
+.cd-day { display: flex; gap: 16px; padding-bottom: 20px; position: relative; }
+.cd-day:last-child { padding-bottom: 0; }
+.cd-day-line { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+.cd-day-num { width: 32px; height: 32px; border-radius: 50%; background: var(--green); color: white; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.cd-day-connector { width: 2px; flex: 1; background: #e8f5ee; margin-top: 6px; min-height: 20px; }
+.cd-day:last-child .cd-day-connector { display: none; }
+.cd-day-content { flex: 1; padding-top: 4px; }
+.cd-day-title { font-weight: 700; font-size: 0.9rem; color: var(--dark); margin-bottom: 6px; }
+.cd-day-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+
+/* RIGHT */
+.cd-right { display: flex; flex-direction: column; gap: 16px; }
+
+.cd-customer-card { background: white; border-radius: 14px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); padding: 20px 22px; }
+.cd-customer-card h4 { font-weight: 700; font-size: 0.95rem; color: var(--dark); margin-bottom: 16px; }
+.cd-customer-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 14px; }
+.cd-customer-item:last-child { margin-bottom: 0; }
+.cd-customer-item svg { width: 16px; height: 16px; color: var(--green); flex-shrink: 0; margin-top: 2px; }
+.cd-customer-label { font-size: 0.7rem; color: var(--muted); margin-bottom: 2px; }
+.cd-customer-val { font-size: 0.88rem; font-weight: 600; color: var(--dark); }
+
+.cd-payment-card { background: white; border-radius: 14px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); padding: 20px 22px; }
+.cd-payment-card h4 { font-weight: 700; font-size: 0.95rem; color: var(--dark); margin-bottom: 16px; }
+.cd-pay-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 0.85rem; }
+.cd-pay-row span:first-child { color: var(--muted); }
+.cd-pay-row span:last-child { font-weight: 600; color: var(--dark); }
+.cd-pay-total { display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1.5px solid #f0f0f0; margin-top: 4px; }
+.cd-pay-total span:first-child { font-weight: 700; color: var(--dark); }
+.cd-pay-total span:last-child { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 900; color: var(--green); }
+.cd-pay-method { display: flex; align-items: center; gap: 8px; margin-top: 14px; padding: 10px 14px; background: #f8f8f8; border-radius: 8px; font-size: 0.8rem; color: var(--muted); }
+.cd-pay-method svg { width: 14px; height: 14px; }
+
+.cd-policy-card { background: #fff8f0; border: 1.5px solid #fde8cc; border-radius: 14px; padding: 16px 18px; }
+.cd-policy-card .cd-policy-title { display: flex; align-items: center; gap: 7px; font-weight: 700; font-size: 0.85rem; color: #c0392b; margin-bottom: 10px; }
+.cd-policy-card p { font-size: 0.8rem; color: #7a3a1a; line-height: 1.6; }
+
+.cd-support-card { background: var(--green); border-radius: 14px; padding: 20px 22px; color: white; }
+.cd-support-card p { font-size: 0.85rem; opacity: 0.9; margin-bottom: 14px; line-height: 1.5; }
+.cd-support-btn { background: white; color: var(--green); border: none; padding: 11px; width: 100%; border-radius: 8px; font-family: 'Be Vietnam Pro', sans-serif; font-weight: 700; font-size: 0.875rem; cursor: pointer; transition: opacity .2s; }
+.cd-support-btn:hover { opacity: 0.9; }
+
+/* FOOTER styles từ 2home.css */
+
+@media (max-width: 800px) {
+  .cd-layout { grid-template-columns: 1fr; }
+  .cd-info-bar { flex-direction: column; }
+  .cd-info-item { border-right: none; border-bottom: 1px solid #f0f0f0; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+}
+</style>
+</head>
+<body>
+
+<div class="cd-page">
+
+  <!-- Breadcrumb -->
+  <div class="cd-breadcrumb">
+    <a href="1canhan.html">←</a>
+    <a href="1canhan.html">Tour của tôi</a>
+    <span class="sep">›</span>
+    <span>Chi tiết đặt hàng</span>
+  </div>
+
+  <!-- Header -->
+  <div class="cd-header">
+    <div class="cd-booking-id" id="cdBookingId">Mã đặt chỗ: #VNT-123456</div>
+    <div class="cd-meta-row">
+      <span class="cd-status sapdi" id="cdStatus">Sắp đi</span>
+      <span class="cd-date-text" id="cdDateText">Đặt ngày 15/09/2024</span>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="cd-actions">
+    <button class="cd-action-btn" onclick="window.print()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Tải hóa đơn PDF
+    </button>
+    <button class="cd-action-btn danger" id="cdCancelBtn" onclick="cancelTour()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+      Hủy tour
+    </button>
+  </div>
+
+  <div class="cd-layout">
+    <!-- LEFT -->
+    <div>
+      <!-- Hero image -->
+      <div class="cd-hero">
+        <div class="cd-hero-img" id="cdHeroImg" style="background:url('halong.jpg') center/cover"></div>
+        <div class="cd-hero-overlay"></div>
+        <div class="cd-hero-title" id="cdTourName">Du thuyền Hạ Long Sang Trọng: Vịnh Lan Hạ</div>
+      </div>
+
+      <!-- Info bar -->
+      <div class="cd-info-bar">
+        <div class="cd-info-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <div>
+            <div class="cd-info-label">Khởi hành</div>
+            <div class="cd-info-val" id="cdDepartDate">12/10/2024</div>
+          </div>
+        </div>
+        <div class="cd-info-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <div>
+            <div class="cd-info-label">Thời lượng</div>
+            <div class="cd-info-val">3 ngày 2 đêm</div>
+          </div>
+        </div>
+        <div class="cd-info-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <div>
+            <div class="cd-info-label">Hành khách</div>
+            <div class="cd-info-val" id="cdGuests">2 Người lớn</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Itinerary -->
+      <div class="cd-card">
+        <div class="cd-card-header">
+          <h3>Lịch trình tóm tắt</h3>
+          <a href="#">Xem chi tiết đầy đủ</a>
+        </div>
+        <div class="cd-itinerary">
+          <div class="cd-day">
+            <div class="cd-day-line">
+              <div class="cd-day-num">01</div>
+              <div class="cd-day-connector"></div>
+            </div>
+            <div class="cd-day-content">
+              <div class="cd-day-title">Ngày 1: Hà Nội – Tuần Châu – Vịnh Lan Hạ</div>
+              <div class="cd-day-desc">Đón khách tại điểm hẹn, di chuyển đến bến Tuần Châu. Nhận phòng và thưởng thức bữa trưa trên du thuyền. Chèo kayak tại khu vực hang Sáng Tối.</div>
+            </div>
+          </div>
+          <div class="cd-day">
+            <div class="cd-day-line">
+              <div class="cd-day-num">02</div>
+              <div class="cd-day-connector"></div>
+            </div>
+            <div class="cd-day-content">
+              <div class="cd-day-title">Ngày 2: Khám phá Vịnh Lan Hạ – Đảo Cát Bà</div>
+              <div class="cd-day-desc">Tập Tai chi trên boong buổi sáng. Tham quan làng chài Việt Hải bằng xe đạp. Tắm biển và lặn ngắm san hô tại bãi tắm Ba Trái Đào.</div>
+            </div>
+          </div>
+          <div class="cd-day">
+            <div class="cd-day-line">
+              <div class="cd-day-num">03</div>
+              <div class="cd-day-connector"></div>
+            </div>
+            <div class="cd-day-content">
+              <div class="cd-day-title">Ngày 3: Hang Quân Y – Hà Nội</div>
+              <div class="cd-day-desc">Tham quan Hang Quân Y trên đảo Cát Bà. Thưởng thức bữa trưa sớm trước khi về bến Tuần Châu và di chuyển về Hà Nội.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="cd-right">
+      <!-- Customer info -->
+      <div class="cd-customer-card">
+        <h4>Thông tin khách hàng</h4>
+        <div class="cd-customer-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          <div>
+            <div class="cd-customer-label">Người đi tên</div>
+            <div class="cd-customer-val" id="cdCusName">—</div>
+          </div>
+        </div>
+        <div class="cd-customer-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <div>
+            <div class="cd-customer-label">Email</div>
+            <div class="cd-customer-val" id="cdCusEmail">—</div>
+          </div>
+        </div>
+        <div class="cd-customer-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 11.61 19 19.45 19.45 0 0 1 5 12.39 19.79 19.79 0 0 1 2.12 4.22 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <div>
+            <div class="cd-customer-label">Số điện thoại</div>
+            <div class="cd-customer-val" id="cdCusPhone">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment detail -->
+      <div class="cd-payment-card">
+        <h4>Chi tiết thanh toán</h4>
+        <div class="cd-pay-row">
+          <span id="cdPayLabel">Giá tour (2 người)</span>
+          <span id="cdPayBase">12.500.000đ</span>
+        </div>
+        <div class="cd-pay-row">
+          <span>Thuế & Phí dịch vụ (10%)</span>
+          <span id="cdPayTax">1.480.000đ</span>
+        </div>
+        <div class="cd-pay-total">
+          <span>Tổng cộng</span>
+          <span id="cdPayTotal">13.980.000đ</span>
+        </div>
+        <div class="cd-pay-method">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          Phương thức thanh toán: Thẻ Tín Dụng (Visa **** 4242)
+        </div>
+      </div>
+
+      <!-- Cancellation policy -->
+      <div class="cd-policy-card">
+        <div class="cd-policy-title">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          CHÍNH SÁCH HỦY
+        </div>
+        <p>Hủy trước 07 ngày: hoàn tiền 100%. Phí hủy 50% áp dụng nếu hủy trong vòng 3-6 ngày trước khởi hành.</p>
+      </div>
+
+      <!-- Support -->
+      <div class="cd-support-card">
+        <p>Cần hỗ trợ?<br>Đội ngũ trợ giúp của chúng tôi luôn sẵn sàng 24/7 cho chuyến đi của bạn.</p>
+        <button class="cd-support-btn">Liên hệ ngay</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="footer-logo">
+        <div class="footer-logo-icon"></div>
+        <span class="footer-logo-text">Vietnam<span>Travel</span></span>
+      </div>
+      <p class="footer-desc">Trải nghiệm du lịch cao cấp tại Đông Nam Á. Chúng tôi cung cấp những dịch vụ lữ hành kết nối bạn với sắc phong phú, văn hóa đa dạng và cảnh quan tuyệt đẹp của miền Việt Nam.</p>
+      <div class="footer-social"><div class="social-btn">f</div><div class="social-btn">in</div><div class="social-btn">yt</div></div>
+    </div>
+    <div class="footer-col">
+      <h4>Về chúng tôi</h4>
+      <ul><li><a href="#">Câu chuyện thương hiệu</a></li><li><a href="#">Đối tác kinh doanh</a></li><li><a href="#">Cơ hội nghề nghiệp</a></li><li><a href="#">Tin tức & sự kiện</a></li></ul>
+    </div>
+    <div class="footer-col">
+      <h4>Hỗ trợ khách hàng</h4>
+      <ul><li><a href="#">Trung tâm trợ giúp</a></li><li><a href="#">Chính sách bảo hộ</a></li><li><a href="#">Điều khoản dịch vụ</a></li><li><a href="#">Hướng dẫn đặt tour</a></li></ul>
+    </div>
+    <div class="footer-newsletter">
+      <h4>Bản tin</h4>
+      <p>Đăng ký để nhận các ưu đãi hấp dẫn và tin tức du lịch mới nhất mỗi tuần.</p>
+      <div class="newsletter-form"><input type="email" placeholder="Email của bạn..."><button>➤</button></div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2024 VIETNAM TRAVEL. ALL RIGHTS RESERVED. DESIGNED WITH ❤️ FOR VIETNAM.</p>
+    <div class="footer-bottom-links"><a href="#">Chính sách bảo mật</a><a href="#">Điều khoản & điều kiện</a></div>
+  </div>
+</footer>
+
+<script src="3data.js"></script>
+<script src="3nav.js"></script>
+<script>
+// Load user info vào thông tin khách hàng
+window.addEventListener('DOMContentLoaded', function() {
+  var u = loadUser ? loadUser() : null;
+  if (u) {
+    var n = document.getElementById('cdCusName');
+    var e = document.getElementById('cdCusEmail');
+    var p = document.getElementById('cdCusPhone');
+    if (n) n.textContent = u.name  || '—';
+    if (e) e.textContent = u.email || '—';
+    if (p) p.textContent = u.phone || '+84 901 234 567';
+  }
+
+  // Đọc booking từ query string hoặc localStorage
+  var params = new URLSearchParams(window.location.search);
+  var bookingId = params.get('id');
+  if (bookingId) {
+    try {
+      var bookings = JSON.parse(localStorage.getItem('vt_bookings') || '[]');
+      var b = bookings.find(function(x){ return x.id === bookingId; });
+      if (b) populateBooking(b);
+    } catch(e) {}
+  }
+});
+
+function populateBooking(b) {
+  var el = function(id){ return document.getElementById(id); };
+  if (el('cdBookingId'))   el('cdBookingId').textContent  = 'Mã đặt chỗ: #' + b.id;
+  if (el('cdTourName'))    el('cdTourName').textContent   = b.name || '';
+  if (el('cdDepartDate'))  el('cdDepartDate').textContent = b.date || '';
+  if (el('cdGuests'))      el('cdGuests').textContent     = b.guests || '';
+  if (el('cdPayTotal'))    el('cdPayTotal').textContent   = b.price || '';
+  if (b.status) {
+    var s = el('cdStatus');
+    if (s) { s.textContent = b.statusLabel; s.className = 'cd-status ' + b.status; }
+  }
+  // Ẩn nút hủy nếu đã hủy hoặc đã hoàn thành
+  if (b.status !== 'sapdi') {
+    var btn = el('cdCancelBtn');
+    if (btn) btn.style.display = 'none';
+  }
+}
+
+function cancelTour() {
+  if (!confirm('Bạn chắc chắn muốn hủy tour này?')) return;
+  var params = new URLSearchParams(window.location.search);
+  var bookingId = params.get('id');
+  if (bookingId) {
+    try {
+      var bookings = JSON.parse(localStorage.getItem('vt_bookings') || '[]');
+      var idx = bookings.findIndex(function(x){ return x.id === bookingId; });
+      if (idx !== -1) {
+        bookings[idx].status = 'dahuy';
+        bookings[idx].statusLabel = 'Đã hủy';
+        localStorage.setItem('vt_bookings', JSON.stringify(bookings));
+      }
+    } catch(e) {}
+  }
+  var s = document.getElementById('cdStatus');
+  if (s) { s.textContent = 'Đã hủy'; s.className = 'cd-status dahuy'; }
+  document.getElementById('cdCancelBtn').style.display = 'none';
+  alert('Tour đã được hủy thành công.');
+}
+</script>
+</body>
+</html>
