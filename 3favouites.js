@@ -28,6 +28,16 @@ function saveFavs() {
 
 function toggleWishlist(e, btn, title, price, imgKey) {
   e.stopPropagation();
+
+  // Kiểm tra đăng nhập
+  var u = null;
+  try { u = JSON.parse(localStorage.getItem('vt_user')); } catch(err) {}
+  if (!u) {
+    if (typeof showToast === 'function') showToast('⚠️ Vui lòng đăng nhập để lưu yêu thích');
+    setTimeout(function(){ window.location.href = '1dangnhap.html'; }, 1200);
+    return;
+  }
+
   var idx = favorites.findIndex(function(f) { return f.title === title; });
   if (idx === -1) {
     favorites.push({ title: title, price: price, imgKey: imgKey });
@@ -41,6 +51,7 @@ function toggleWishlist(e, btn, title, price, imgKey) {
   saveFavs();
   updateFavPanel();
   if (document.getElementById('cpWishlistGrid')) cpRenderWishlist();
+  if (typeof recTrackFavourite === 'function') recTrackFavourite(title, idx === -1);
 }
 
 function updateFavPanel() {

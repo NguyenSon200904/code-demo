@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chi Tiết Tour – VietnamTravel</title>
+<link rel="stylesheet" href="2bass.css">
+<link rel="stylesheet" href="2nav.css">
+<link rel="stylesheet" href="2home.css">
+<link rel="stylesheet" href="2chi-tiet-tour.css">
+</head>
+<body>
+
+<!-- NAV inject bởi nav.js -->
+
+<!-- BREADCRUMB -->
+<div class="ct-breadcrumb" id="ctBreadcrumb">
+  <a href="1trangchu.html">Trang chủ</a>
+  <span>›</span>
+  <a href="1tourdulich.html">Tour du lịch</a>
+  <span>›</span>
+  <span id="ctBreadcrumbName">Đang tải...</span>
+</div>
+
+<!-- LOADING -->
+<div class="ct-loading" id="ctLoading">
+  <div class="ct-spinner"></div>
+  <p>Đang tải thông tin tour...</p>
+</div>
+
+<!-- MAIN -->
+<div id="ctMain" style="display:none">
+  <div class="ct-hero">
+    <div class="ct-hero-bg" id="ctHeroBg"></div>
+    <div class="ct-hero-overlay"></div>
+    <div class="ct-hero-info">
+      <div class="ct-hero-badge" id="ctDuration">3 ngày 2 đêm</div>
+      <h1 class="ct-hero-title" id="ctHeroTitle">Tên tour</h1>
+      <div class="ct-hero-meta">
+        <span>📍 <span id="ctDestination">—</span></span>
+        <span>⭐ <span id="ctRating">4.8</span> (<span id="ctReviews">0</span> đánh giá)</span>
+        <span id="ctBadgeSpan"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="ct-layout">
+    <!-- LEFT -->
+    <div class="ct-content">
+      <div class="ct-section">
+        <div class="ct-section-title"><span>📋</span> Mô tả tour</div>
+        <p class="ct-desc" id="ctDesc">—</p>
+      </div>
+
+      <div class="ct-section" id="ctHighlightsSection">
+        <div class="ct-section-title"><span>✨</span> Điểm nổi bật</div>
+        <div class="ct-highlights" id="ctHighlights"></div>
+      </div>
+
+      <div class="ct-section" id="ctItinerarySection">
+        <div class="ct-section-title"><span>🗓️</span> Lịch trình chi tiết</div>
+        <div class="ct-itinerary" id="ctItinerary"></div>
+      </div>
+
+      <div class="ct-section">
+        <div class="ct-section-title"><span>📦</span> Dịch vụ</div>
+        <div class="ct-inc-exc">
+          <div class="ct-inc">
+            <h4>✅ Bao gồm</h4>
+            <ul id="ctIncludes"></ul>
+          </div>
+          <div class="ct-exc">
+            <h4>❌ Không bao gồm</h4>
+            <ul id="ctExcludes"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: BOOKING -->
+    <div class="ct-sidebar">
+      <div class="ct-booking-card">
+        <div class="ct-booking-title">Chọn lịch khởi hành</div>
+        <div class="ct-schedule-label">Lịch trình có sẵn</div>
+        <div class="ct-schedule-list" id="ctScheduleList"></div>
+
+        <div class="ct-schedule-label">Số lượng khách</div>
+        <div class="ct-guests">
+          <div class="ct-guest-item">
+            <div class="ct-guest-label">Người lớn</div>
+            <div class="ct-guest-ctrl">
+              <button class="ct-guest-btn" onclick="changeGuest('adult',-1)">−</button>
+              <span class="ct-guest-num" id="gAdult">2</span>
+              <button class="ct-guest-btn" onclick="changeGuest('adult',1)">+</button>
+            </div>
+          </div>
+          <div class="ct-guest-item">
+            <div class="ct-guest-label">Trẻ em</div>
+            <div class="ct-guest-ctrl">
+              <button class="ct-guest-btn" onclick="changeGuest('child',-1)">−</button>
+              <span class="ct-guest-num" id="gChild">0</span>
+              <button class="ct-guest-btn" onclick="changeGuest('child',1)">+</button>
+            </div>
+          </div>
+          <div class="ct-guest-item">
+            <div class="ct-guest-label">Em bé</div>
+            <div class="ct-guest-ctrl">
+              <button class="ct-guest-btn" onclick="changeGuest('baby',-1)">−</button>
+              <span class="ct-guest-num" id="gBaby">0</span>
+              <button class="ct-guest-btn" onclick="changeGuest('baby',1)">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="ct-price-summary">
+          <div class="ct-price-row">
+            <span>Người lớn × <span id="sumAdult">2</span></span>
+            <span id="sumAdultPrice">—</span>
+          </div>
+          <div class="ct-price-row">
+            <span>Trẻ em × <span id="sumChild">0</span></span>
+            <span id="sumChildPrice">—</span>
+          </div>
+          <div class="ct-price-row">
+            <span>Em bé × <span id="sumBaby">0</span></span>
+            <span id="sumBabyPrice">—</span>
+          </div>
+          <div class="ct-price-row total">
+            <span>Tổng cộng</span>
+            <span class="ct-price-val" id="ctSumTotal">—</span>
+          </div>
+        </div>
+
+        <button class="ct-btn-book" id="ctBtnBook" onclick="goToBooking()">🎫 Đặt tour ngay</button>
+        <div class="ct-hotline">Hotline: <strong>1900 x709</strong> (8:00 – 22:00)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ERROR -->
+<div id="ctError" style="display:none;text-align:center;padding:80px 20px;color:var(--muted)">
+  <div style="font-size:3rem;margin-bottom:16px">😕</div>
+  <p style="font-size:1rem;font-weight:600;color:var(--dark);margin-bottom:8px">Không tìm thấy tour</p>
+  <button onclick="window.location.href='1tourdulich.html'"
+    style="background:var(--green);color:white;border:none;padding:10px 24px;border-radius:8px;cursor:pointer;font-weight:600;margin-top:16px">
+    Xem các tour khác
+  </button>
+</div>
+
+<!-- MODAL ĐẶT TOUR (reuse từ trang chủ) -->
+<div class="modal-overlay" id="bookingOverlay" onclick="closeBookingModal()"></div>
+<div class="modal" id="bookingModal">
+  <div class="modal-header">
+    <div>
+      <div class="modal-pretitle">Xác nhận đặt tour</div>
+      <h3 class="modal-title" id="modalTourName">Tour du lịch</h3>
+    </div>
+    <button class="modal-close" onclick="closeBookingModal()">✕</button>
+  </div>
+  <div class="modal-steps">
+    <div class="modal-step active" id="step1-dot"><span>1</span>Thông tin</div>
+    <div class="modal-step-line"></div>
+    <div class="modal-step" id="step2-dot"><span>2</span>Thanh toán</div>
+    <div class="modal-step-line"></div>
+    <div class="modal-step" id="step3-dot"><span>3</span>Xác nhận</div>
+  </div>
+  <div class="modal-body" id="modalStep1">
+    <div class="modal-price-row">
+      <span class="modal-price-label">Giá từ</span>
+      <span class="modal-price-val" id="modalTourPrice">—</span>
+      <span class="modal-price-label">/ người</span>
+    </div>
+    <div class="modal-form-grid">
+      <div class="modal-field"><label>Họ và tên *</label><input type="text" id="mName" placeholder="Nguyễn Văn A"></div>
+      <div class="modal-field"><label>Số điện thoại *</label><input type="tel" id="mPhone" placeholder="0901 234 567"></div>
+      <div class="modal-field"><label>Email *</label><input type="email" id="mEmail" placeholder="email@gmail.com"></div>
+      <div class="modal-field"><label>Ngày khởi hành *</label><input type="date" id="mDate"></div>
+      <div class="modal-field"><label>Số người lớn</label>
+        <select id="mAdults" onchange="updateModalSummary()">
+          <option value="1">1 người</option><option value="2" selected>2 người</option>
+          <option value="3">3 người</option><option value="4">4 người</option><option value="6">6 người</option>
+        </select>
+      </div>
+      <div class="modal-field"><label>Số trẻ em</label>
+        <select id="mKids" onchange="updateModalSummary()">
+          <option value="0" selected>Không có</option><option value="1">1 trẻ</option>
+          <option value="2">2 trẻ</option><option value="3">3 trẻ</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-field" style="margin-top:12px"><label>Ghi chú</label>
+      <textarea id="mNote" placeholder="Yêu cầu đặc biệt..." class="modal-textarea"></textarea>
+    </div>
+    <div class="modal-summary">
+      <div class="modal-summary-row"><span>Tour</span><span id="sumTour">—</span></div>
+      <div class="modal-summary-row"><span>Giá / người</span><span id="sumPrice">—</span></div>
+      <div class="modal-summary-row"><span>Số người</span><span id="sumPeople">2 người lớn</span></div>
+      <div class="modal-summary-row total"><span>Tổng cộng</span><span id="sumTotal">—</span></div>
+    </div>
+    <button class="modal-btn-next" onclick="goStep(2)">Tiếp theo →</button>
+  </div>
+  <div class="modal-body" id="modalStep2" style="display:none">
+    <div class="pay-methods">
+      <label class="pay-method active" onclick="selectPayment(this,'bank')"><input type="radio" name="payment" value="bank" checked hidden><span class="pay-icon">🏦</span><span class="pay-label">Chuyển khoản ngân hàng</span><span class="pay-check">✓</span></label>
+      <label class="pay-method" onclick="selectPayment(this,'card')"><input type="radio" name="payment" value="card" hidden><span class="pay-icon">💳</span><span class="pay-label">Thẻ tín dụng / Visa</span><span class="pay-check">✓</span></label>
+      <label class="pay-method" onclick="selectPayment(this,'momo')"><input type="radio" name="payment" value="momo" hidden><span class="pay-icon">📱</span><span class="pay-label">Ví MoMo</span><span class="pay-check">✓</span></label>
+      <label class="pay-method" onclick="selectPayment(this,'cod')"><input type="radio" name="payment" value="cod" hidden><span class="pay-icon">💵</span><span class="pay-label">Thanh toán trực tiếp</span><span class="pay-check">✓</span></label>
+    </div>
+    <div id="bankInfo" class="bank-info">
+      <div class="bank-info-row"><span>Ngân hàng</span><strong>Vietcombank</strong></div>
+      <div class="bank-info-row"><span>Số tài khoản</span><strong>1234 5678 9012</strong></div>
+      <div class="bank-info-row"><span>Chủ tài khoản</span><strong>CONG TY VIETNAMTRAVEL</strong></div>
+    </div>
+    <div class="modal-summary" style="margin-top:16px">
+      <div class="modal-summary-row total"><span>Tổng thanh toán</span><span id="sumTotal2">—</span></div>
+    </div>
+    <div style="display:flex;gap:12px;margin-top:20px">
+      <button class="modal-btn-back" onclick="goStep(1)">← Quay lại</button>
+      <button class="modal-btn-next" onclick="goStep(3)" style="flex:1">Xác nhận đặt →</button>
+    </div>
+  </div>
+  <div class="modal-body" id="modalStep3" style="display:none;text-align:center;padding:32px 24px">
+    <div class="success-anim">✅</div>
+    <h3 style="font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--dark);margin:16px 0 8px">Đặt tour thành công!</h3>
+    <p style="color:var(--muted);font-size:0.875rem;line-height:1.6;margin-bottom:20px">Cảm ơn bạn đã tin tưởng VietnamTravel 🌿<br>Chúng tôi sẽ liên hệ xác nhận trong vòng <strong>2 giờ</strong>.</p>
+    <div class="booking-code-box">
+      <div style="font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Mã đặt chỗ</div>
+      <div id="bookingCode" style="font-size:1.8rem;font-weight:700;font-family:'Playfair Display',serif;color:var(--green);letter-spacing:4px">VNT-XXXX</div>
+    </div>
+    <button class="modal-btn-next" onclick="closeBookingModal()" style="margin-top:20px">Đóng</button>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="footer-logo"><div class="footer-logo-icon"></div><span class="footer-logo-text">Vietnam<span>Travel</span></span></div>
+      <p class="footer-desc">Trải nghiệm du lịch cao cấp tại Đông Nam Á. Kết nối bạn với văn hóa đa dạng và cảnh quan tuyệt đẹp của Việt Nam.</p>
+      <div class="footer-social"><div class="social-btn">f</div><div class="social-btn">in</div><div class="social-btn">yt</div></div>
+    </div>
+    <div class="footer-col"><h4>Về chúng tôi</h4><ul><li><a href="#">Câu chuyện thương hiệu</a></li><li><a href="#">Đối tác kinh doanh</a></li><li><a href="#">Cơ hội nghề nghiệp</a></li><li><a href="#">Tin tức & sự kiện</a></li></ul></div>
+    <div class="footer-col"><h4>Hỗ trợ khách hàng</h4><ul><li><a href="#">Trung tâm trợ giúp</a></li><li><a href="#">Chính sách bảo hộ</a></li><li><a href="#">Điều khoản dịch vụ</a></li><li><a href="#">Hướng dẫn đặt tour</a></li></ul></div>
+    <div class="footer-newsletter"><h4>Bản tin</h4><p>Đăng ký nhận ưu đãi mỗi tuần.</p><div class="newsletter-form"><input type="email" placeholder="Email của bạn..."><button>➤</button></div></div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 VIETNAMTRAVEL. Bản quyền đã được bảo lưu.</p>
+    <div class="footer-bottom-links"><a href="#">Chính sách bảo mật</a><a href="#">Điều khoản & điều kiện</a></div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script src="3data.js"></script>
+<script src="3nav.js"></script>
+<script src="3toast.js"></script>
+<script src="3booking.js"></script>
+<script src="3recommend.js"></script>
+<script>
+// ============================================================
+// LOCAL TOUR DATA CHI TIẾT
+// ============================================================
+const TOUR_DETAIL_DATA = {
+  'du-thuyen-ha-long': {
+    slug: 'du-thuyen-ha-long',
+    desc: 'Trải nghiệm du thuyền 5 sao sang trọng trên Vịnh Hạ Long – di sản thiên nhiên thế giới. Ngắm hoàng hôn, chèo kayak qua các hang động kỳ bí và thưởng thức hải sản tươi sống.',
+    highlights: ['Du thuyền 5 sao cao cấp', 'Chèo kayak hang động', 'Ngắm hoàng hôn trên vịnh', 'Hải sản tươi sống mỗi bữa', 'Tắm biển làng chài', 'Hướng dẫn viên song ngữ'],
+    itinerary: [
+      { day:'01', title:'Hà Nội – Tuần Châu – Vịnh Lan Hạ', desc:'Đón khách tại Hà Nội, di chuyển đến bến Tuần Châu. Nhận phòng và thưởng thức bữa trưa trên du thuyền. Chiều chèo kayak qua hang Sáng Tối.' },
+      { day:'02', title:'Khám phá Vịnh Lan Hạ – Đảo Cát Bà', desc:'Tập Tai Chi buổi sáng trên boong. Tham quan làng chài Việt Hải bằng xe đạp. Tắm biển và lặn ngắm san hô tại bãi tắm Ba Trái Đào.' },
+      { day:'03', title:'Hang Quân Y – Hà Nội', desc:'Tham quan Hang Quân Y trên đảo Cát Bà. Thưởng thức bữa trưa sớm rồi trở về bến Tuần Châu, di chuyển về Hà Nội.' },
+    ],
+    includes: ['Vé tàu khứ hồi Hà Nội – Tuần Châu', 'Phòng cabin tiêu chuẩn', 'Tất cả bữa ăn trên tàu', 'Hướng dẫn viên song ngữ', 'Chèo kayak & lặn snorkel'],
+    excludes: ['Đồ uống có cồn', 'Chi phí cá nhân', 'Tip hướng dẫn viên', 'Bảo hiểm du lịch'],
+    schedules: [
+      { date:'15/06/2026', slots:8, price:'6.999.000đ', priceNum:6999000 },
+      { date:'22/06/2026', slots:3, price:'6.999.000đ', priceNum:6999000 },
+      { date:'29/06/2026', slots:12, price:'7.299.000đ', priceNum:7299000 },
+    ]
+  },
+  'cao-nguyen-da-dong-van': {
+    slug: 'cao-nguyen-da-dong-van',
+    desc: 'Hành trình khám phá Cao nguyên đá Đồng Văn – công viên địa chất toàn cầu UNESCO. Ngắm hoa tam giác mạch, trekking qua những bản làng dân tộc H\'Mông và thưởng thức ẩm thực vùng cao.',
+    highlights: ['Hoa tam giác mạch mùa thu', 'Công viên địa chất UNESCO', 'Bản làng H\'Mông & Lô Lô', 'Đèo Mã Pì Lèng hùng vĩ', 'Phố cổ Đồng Văn', 'Pháo đài Đồng Văn'],
+    itinerary: [
+      { day:'01', title:'Hà Nội – Hà Giang', desc:'Khởi hành từ Hà Nội lúc 7h sáng. Đến Hà Giang, nhận phòng và tham quan thành phố. Tối thưởng thức thắng cố đặc sản.' },
+      { day:'02', title:'Hà Giang – Đồng Văn', desc:'Di chuyển qua đèo Mã Pì Lèng hùng vĩ. Tham quan Phố cổ Đồng Văn và Pháo đài Đồng Văn. Ngủ tại homestay bản địa.' },
+      { day:'03', title:'Đồng Văn – Lũng Cú – Mèo Vạc', desc:'Thăm cột cờ Lũng Cú điểm cực Bắc Tổ quốc. Trekking qua bản H\'Mông. Chiều xuống Mèo Vạc.' },
+    ],
+    includes: ['Xe limousine Hà Nội – Hà Giang', 'Khách sạn 3 sao', 'Tất cả bữa ăn', 'Hướng dẫn viên địa phương', 'Vé tham quan'],
+    excludes: ['Chi phí cá nhân', 'Đồ uống', 'Tip hướng dẫn viên'],
+    schedules: [
+      { date:'20/06/2026', slots:10, price:'6.999.000đ', priceNum:6999000 },
+      { date:'05/07/2026', slots:5, price:'6.999.000đ', priceNum:6999000 },
+    ]
+  },
+  'dong-phong-nha': {
+    slug: 'dong-phong-nha',
+    desc: 'Khám phá hệ thống hang động kỳ vĩ tại Vườn quốc gia Phong Nha – Kẻ Bàng, di sản thiên nhiên thế giới được UNESCO công nhận. Trải nghiệm chèo thuyền qua hang tối và leo núi.',
+    highlights: ['Hang Phong Nha ngoạn mục', 'Di sản UNESCO', 'Chèo thuyền trong hang', 'Hang Tiên – động khô', 'Suối nước Moọc', 'Rừng nguyên sinh'],
+    itinerary: [
+      { day:'01', title:'Hà Nội – Đồng Hới – Phong Nha', desc:'Bay từ Hà Nội đến Đồng Hới. Di chuyển vào Phong Nha, nhận phòng. Chiều tắm suối Moọc.' },
+      { day:'02', title:'Khám phá hệ thống hang động', desc:'Buổi sáng tham quan Động Phong Nha bằng thuyền. Chiều khám phá Hang Tiên và Động Thiên Đường.' },
+      { day:'03', title:'Phong Nha – Đồng Hới – Hà Nội', desc:'Sáng tham quan làng Phong Nha. Trưa bay về Hà Nội. Kết thúc hành trình.' },
+    ],
+    includes: ['Vé máy bay khứ hồi', 'Khách sạn 3 sao', 'Vé vào cửa hang động', 'Thuyền tham quan', 'Hướng dẫn viên'],
+    excludes: ['Chi phí cá nhân', 'Đồ uống', 'Bảo hiểm du lịch'],
+    schedules: [
+      { date:'18/06/2026', slots:15, price:'6.999.000đ', priceNum:6999000 },
+      { date:'25/06/2026', slots:2, price:'6.999.000đ', priceNum:6999000 },
+    ]
+  },
+};
+
+// Map title → slug
+const TITLE_TO_SLUG = {
+  'Du Thuyền Hạ Long Sang Trọng': 'du-thuyen-ha-long',
+  'Cao Nguyên Đá Đồng Văn':       'cao-nguyen-da-dong-van',
+  'Động Phong Nha':                'dong-phong-nha',
+};
+
+// Fallback cho các tour chưa có detail data
+function makeDetailFromTour(tour) {
+  return {
+    slug: tour.title,
+    desc: 'Tour du lịch khám phá vẻ đẹp thiên nhiên và văn hóa ' + tour.location + '. Hành trình được thiết kế chu đáo với hướng dẫn viên kinh nghiệm, bao gồm ăn ở và vận chuyển.',
+    highlights: ['Hướng dẫn viên kinh nghiệm', 'Ăn uống đầy đủ', 'Khách sạn tiêu chuẩn', 'Vé tham quan', tour.location, 'Xe đưa đón sân bay'],
+    itinerary: [
+      { day:'01', title:'Khởi hành – Nhận phòng', desc:'Đón khách tại điểm hẹn, di chuyển đến ' + tour.location + '. Nhận phòng, nghỉ ngơi và ăn tối.' },
+      { day:'02', title:'Tham quan các điểm nổi bật', desc:'Hành trình tham quan các điểm du lịch đặc sắc tại ' + tour.location + '. Thưởng thức ẩm thực địa phương.' },
+      { day:'03', title:'Khám phá – Trở về', desc:'Buổi sáng tự do khám phá, mua sắm. Chiều lên đường trở về.' },
+    ],
+    includes: ['Xe đưa đón', 'Khách sạn 3 sao', 'Tất cả bữa ăn', 'Vé tham quan', 'Hướng dẫn viên'],
+    excludes: ['Chi phí cá nhân', 'Đồ uống', 'Tip hướng dẫn viên'],
+    schedules: [
+      { date:'20/06/2026', slots:10, price: tour.price, priceNum: parseInt((tour.price||'0').replace(/[^0-9]/g,'')) },
+      { date:'04/07/2026', slots:5,  price: tour.price, priceNum: parseInt((tour.price||'0').replace(/[^0-9]/g,'')) },
+    ]
+  };
+}
+
+// ============================================================
+// STATE
+// ============================================================
+let tourDetail = null;
+let selectedScheduleIdx = 0;
+let guests = { adult:2, child:0, baby:0 };
+let currentPrice = 0;
+let currentTourTitle = '';
+
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('DOMContentLoaded', function() {
+  var params = new URLSearchParams(window.location.search);
+  var slug   = params.get('slug') || params.get('tour') || params.get('id');
+  var title  = params.get('title') ? decodeURIComponent(params.get('title')) : null;
+
+  // Tìm tour detail
+  if (slug && TOUR_DETAIL_DATA[slug]) {
+    tourDetail = TOUR_DETAIL_DATA[slug];
+  } else if (title) {
+    var mappedSlug = TITLE_TO_SLUG[title];
+    if (mappedSlug && TOUR_DETAIL_DATA[mappedSlug]) {
+      tourDetail = TOUR_DETAIL_DATA[mappedSlug];
+    } else {
+      // fallback từ tour data
+      var allTours = typeof getActiveTours === 'function' ? getActiveTours() : [];
+      var found = allTours.find(function(t){ return t.title === title; });
+      if (found) tourDetail = makeDetailFromTour(found);
+    }
+  }
+
+  setTimeout(function() {
+    document.getElementById('ctLoading').style.display = 'none';
+    if (!tourDetail) { document.getElementById('ctError').style.display = 'block'; return; }
+    renderTourDetail();
+    document.getElementById('ctMain').style.display = 'block';
+
+    // Track view cho recommendation
+    if (typeof recTrackView === 'function') recTrackView(currentTourTitle);
+  }, 600);
+});
+
+// ============================================================
+// RENDER
+// ============================================================
+function renderTourDetail() {
+  var d = tourDetail;
+  // Tìm tour gốc để lấy thêm thông tin
+  var allTours = typeof getActiveTours === 'function' ? getActiveTours() : [];
+  var params   = new URLSearchParams(window.location.search);
+  var title    = params.get('title') ? decodeURIComponent(params.get('title')) : null;
+  var baseTour = allTours.find(function(t){ return t.title === title; }) || {};
+
+  currentTourTitle = title || baseTour.title || d.slug;
+
+  // Breadcrumb & title
+  document.getElementById('ctBreadcrumbName').textContent = currentTourTitle;
+  document.title = currentTourTitle + ' – VietnamTravel';
+
+  // Hero
+  if (baseTour.imgKey && typeof getImgBg === 'function') {
+    var bg = getImgBg(baseTour.imgKey);
+    document.getElementById('ctHeroBg').style.cssText = 'width:100%;height:100%;' + (bg.startsWith('url') ? 'background:' + bg + ';background-size:cover;background-position:center;' : 'background:' + bg + ';');
+  } else {
+    document.getElementById('ctHeroBg').style.background = 'linear-gradient(135deg,#2d8a4e,#1a4e2d)';
+  }
+
+  // Badge (duration)
+  var badge = baseTour.badge || '3 ngày 2 đêm';
+  document.getElementById('ctDuration').textContent = badge;
+  document.getElementById('ctHeroTitle').textContent = currentTourTitle;
+  document.getElementById('ctDestination').textContent = baseTour.location || d.slug;
+  document.getElementById('ctRating').textContent = (baseTour.stars || '★★★★★').split('★').length - 1 + '.0';
+  document.getElementById('ctReviews').textContent = baseTour.reviews || '0';
+
+  // Description
+  document.getElementById('ctDesc').textContent = d.desc;
+
+  // Highlights
+  if (d.highlights && d.highlights.length) {
+    document.getElementById('ctHighlights').innerHTML = d.highlights.map(function(h){
+      return '<div class="ct-highlight-item">' + h + '</div>';
+    }).join('');
+  } else {
+    document.getElementById('ctHighlightsSection').style.display = 'none';
+  }
+
+  // Itinerary
+  if (d.itinerary && d.itinerary.length) {
+    document.getElementById('ctItinerary').innerHTML = d.itinerary.map(function(day){
+      return '<div class="ct-day">' +
+        '<div class="ct-day-num">' + day.day + '</div>' +
+        '<div class="ct-day-body"><div class="ct-day-title">' + day.title + '</div>' +
+        '<div class="ct-day-desc">' + day.desc + '</div></div></div>';
+    }).join('');
+  } else {
+    document.getElementById('ctItinerarySection').style.display = 'none';
+  }
+
+  // Includes / Excludes
+  document.getElementById('ctIncludes').innerHTML = (d.includes || []).map(function(i){ return '<li>' + i + '</li>'; }).join('');
+  document.getElementById('ctExcludes').innerHTML = (d.excludes || []).map(function(i){ return '<li>' + i + '</li>'; }).join('');
+
+  // Schedules
+  renderSchedules();
+}
+
+function renderSchedules() {
+  var list = document.getElementById('ctScheduleList');
+  var scheds = tourDetail.schedules || [];
+
+  if (!scheds.length) {
+    list.innerHTML = '<p style="color:var(--muted);font-size:0.875rem">Hiện chưa có lịch khởi hành</p>';
+    document.getElementById('ctBtnBook').disabled = true;
+    return;
+  }
+
+  list.innerHTML = scheds.map(function(s, i) {
+    var slotsHtml = s.slots <= 3
+      ? '<span style="color:#e55;font-weight:600">Còn ' + s.slots + ' chỗ!</span>'
+      : s.slots <= 10
+        ? '<span style="color:#f90">Còn ' + s.slots + ' chỗ</span>'
+        : '<span style="color:var(--muted)">' + s.slots + ' chỗ trống</span>';
+    return '<div class="ct-schedule-item' + (i===0?' active':'') + '" onclick="selectSchedule(' + i + ',this)">' +
+      '<div><div class="ct-schedule-date">🗓️ ' + s.date + '</div>' +
+      '<div class="ct-schedule-slots">' + slotsHtml + '</div></div>' +
+      '<div class="ct-schedule-price">' + s.price + '</div></div>';
+  }).join('');
+
+  selectSchedule(0, list.querySelector('.ct-schedule-item'));
+}
+
+function selectSchedule(idx, el) {
+  document.querySelectorAll('.ct-schedule-item').forEach(function(i){ i.classList.remove('active'); });
+  if (el) el.classList.add('active');
+  selectedScheduleIdx = idx;
+  currentPrice = (tourDetail.schedules[idx] || {}).priceNum || 0;
+  updateSummary();
+}
+
+function changeGuest(type, delta) {
+  var min = type === 'adult' ? 1 : 0;
+  guests[type] = Math.max(min, (guests[type] || 0) + delta);
+  document.getElementById('g' + type.charAt(0).toUpperCase() + type.slice(1)).textContent = guests[type];
+  updateSummary();
+}
+
+function updateSummary() {
+  var pa = currentPrice;
+  var pc = Math.floor(pa * 0.7);
+  var pb = 0;
+  var fmt = function(n){ return n > 0 ? n.toLocaleString('vi-VN') + 'đ' : '0đ'; };
+
+  document.getElementById('sumAdult').textContent = guests.adult;
+  document.getElementById('sumAdultPrice').textContent = fmt(pa * guests.adult);
+  document.getElementById('sumChild').textContent = guests.child;
+  document.getElementById('sumChildPrice').textContent = guests.child > 0 ? fmt(pc * guests.child) : '—';
+  document.getElementById('sumBaby').textContent = guests.baby;
+  document.getElementById('sumBabyPrice').textContent = guests.baby > 0 ? fmt(pb * guests.baby) : '—';
+
+  var total = pa * guests.adult + pc * guests.child + pb * guests.baby;
+  document.getElementById('ctSumTotal').textContent = fmt(total);
+}
+
+function goToBooking() {
+  var u = null;
+  try { u = JSON.parse(localStorage.getItem('vt_user')); } catch(e) {}
+  if (!u) {
+    if (typeof showToast === 'function') showToast('⚠️ Vui lòng đăng nhập để đặt tour');
+    setTimeout(function(){ window.location.href = '1dangnhap.html'; }, 1200);
+    return;
+  }
+  var sched = tourDetail.schedules[selectedScheduleIdx];
+  var price = sched ? sched.price : '';
+  if (typeof openBookingModal === 'function') openBookingModal(currentTourTitle, price);
+}
+</script>
+</body>
+</html>

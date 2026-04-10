@@ -1,7 +1,5 @@
-// ============================================================
-// 3admin.js
-// ============================================================
 
+// 3admin.js
 // ===== SWITCH TAB =====
 function switchTab(name) {
   document.querySelectorAll('.admin-tab').forEach(function(t){ t.classList.remove('active'); t.style.display='none'; });
@@ -15,7 +13,7 @@ function switchTab(name) {
   if (name === 'dashboard') adminUpdateDashStats();
 }
 
-// ===== DASHBOARD STATS =====
+// ===== Bảng thống kê =====
 function adminUpdateDashStats() {
   var db = [];
   try { db = JSON.parse(localStorage.getItem('vt_userdb') || sessionStorage.getItem('vt_userdb') || '[]'); } catch(e) {}
@@ -36,8 +34,8 @@ function adminUpdateDashStats() {
   if (statB) statB.textContent = total;
 }
 
-// ===== USERS TABLE =====
-// ===== USERS MANAGEMENT =====
+// ===== bảng người dùng =====
+// ===== quản lí người dùng =====
 var ADMIN_USER_PAGE = 1;
 var ADMIN_USER_PER  = 10;
 var ADMIN_USER_SEARCH = '';
@@ -51,7 +49,7 @@ async function renderUsersTable() {
 
   var users = [];
 
-  // Thử API trước
+  // test api
   try {
     var res = await apiAdminGetUsers({
       page:    ADMIN_USER_PAGE,
