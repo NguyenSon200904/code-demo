@@ -303,8 +303,8 @@
 <div class="toast" id="toast"></div>
 
 <script src="3api.js"></script>
-<script src="3nav.js"></script>
 <script src="3data.js"></script>
+<script src="3nav.js"></script>
 <script src="3toast.js"></script>
 <script src="3booking.js"></script>
 <script src="3recommend.js"></script>
@@ -317,12 +317,11 @@ window.addEventListener('DOMContentLoaded', () => {
   setTimeout(function() {
     var u = loadUser();
     if (u) {
-      var recTours = recGetTours(4);
-      if (recTours.length) {
-        document.getElementById('recSection').style.display = 'block';
-        recRender('recGrid');
+      recInjectHomepage();
+      var sub = document.getElementById('recSubtitle');
+      if (sub) {
         var name = u.name ? u.name.split(' ').slice(-1)[0] : '';
-        if (name) document.getElementById('recSubtitle').textContent = 'Dựa trên sở thích của ' + name;
+        sub.textContent = name ? recGetReason() + ' – ' + name : recGetReason();
       }
     }
   }, 300);

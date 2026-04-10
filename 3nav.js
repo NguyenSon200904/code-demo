@@ -28,7 +28,7 @@
     <li id="navYeuThich" style="display:none"><a href="1canhan.html">Yêu thích</a></li>
   </ul>
   <div class="nav-cta">
-    <div id="navGuest" style="display:none;align-items:center;gap:8px;">
+    <div id="navGuest" style="display:flex;align-items:center;gap:8px;">
       <button class="btn-login-nav nav-desktop-only" onclick="window.location.href='1dangnhap.html'">Đăng nhập</button>
       <button class="btn-register-nav nav-desktop-only" onclick="window.location.href='1dangky.html'">Đăng ký</button>
     </div>
@@ -145,23 +145,34 @@
 
   setTimeout(function() {
     if (typeof initNav === 'function') initNav();
-    // Sync mobile menu user state
-    var u = typeof loadUser === 'function' ? loadUser() : null;
+    else {
+      var u = null;
+      try { u = JSON.parse(localStorage.getItem('vt_user')); } catch(e) {}
+      var ng = document.getElementById('navGuest');
+      var nu = document.getElementById('navUser');
+      if (ng && nu) {
+        ng.style.display = u ? 'none' : 'flex';
+        nu.style.display = u ? 'flex' : 'none';
+        if (u) {
+          var av = document.getElementById('navAvatarEl');
+          if (av) av.textContent = u.name ? u.name[0].toUpperCase() : 'U';
+        }
+      }
+    }
+    var u2 = null;
+    try { u2 = JSON.parse(localStorage.getItem('vt_user')); } catch(e) {}
     var mg = document.getElementById('navMobileGuest');
     var mu = document.getElementById('navMobileUser');
-    if (mg && mu) { mg.style.display = u ? 'none' : 'block'; mu.style.display = u ? 'block' : 'none'; }
-    // Hiện nav links khi đã đăng nhập
+    if (mg && mu) { mg.style.display = u2 ? 'none' : 'block'; mu.style.display = u2 ? 'block' : 'none'; }
     var lichSu   = document.getElementById('navLichSu');
     var yeuThich = document.getElementById('navYeuThich');
-    if (u) {
+    if (u2) {
       if (lichSu)   lichSu.style.display   = 'list-item';
       if (yeuThich) yeuThich.style.display = 'list-item';
-      // Hiện tên user trên nav
       var usernameEl = document.getElementById('navUsernameEl');
-      if (usernameEl) usernameEl.textContent = u.name ? u.name.split(' ').slice(-1)[0] : '';
-      // Hiện staff menu
+      if (usernameEl) usernameEl.textContent = u2.name ? u2.name.split(' ').slice(-1)[0] : '';
       var staffBtn = document.getElementById('staffMenuBtn');
-      if (staffBtn && (u.role === 'staff' || u.role === 2)) staffBtn.style.display = 'block';
+      if (staffBtn && (u2.role === 'staff' || u2.role === 2)) staffBtn.style.display = 'block';
     }
   }, 0);
 

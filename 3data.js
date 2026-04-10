@@ -130,10 +130,8 @@ function getImgBg(imgKey) {
 // ============================================================
 function buildTourCard(t, animate, idx) {
   const bg     = getImgBg(t.imgKey);
-  // Link tới chi-tiet-tour.html, truyền title qua query string
-  const href   = '1chi-tiet-tour.html?title=' + encodeURIComponent(t.title);
-  const click  = `onclick="window.location.href='${href}'"`;
-  const cursor = 'pointer';
+  const click  = t.page ? `onclick="window.location.href='${t.page}'"` : '';
+  const cursor = t.page ? 'pointer' : 'default';
   const delay  = animate ? `transition-delay:${idx * 80}ms` : '';
   return `<div class="tour-card" ${click} style="cursor:${cursor};opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease;${delay}">
     <div class="tour-img">

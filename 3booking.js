@@ -7,6 +7,15 @@ var currentPrice = 0;
 var currentTourId = '';
 
 function openBookingModal(tourName, price, tourId) {
+  // Kiểm tra đăng nhập
+  var u = null;
+  try { u = JSON.parse(localStorage.getItem('vt_user')); } catch(e) {}
+  if (!u) {
+    if (typeof showToast === 'function') showToast('⚠️ Vui lòng đăng nhập để đặt tour');
+    setTimeout(function(){ window.location.href = '1dangnhap.html'; }, 1200);
+    return;
+  }
+
   currentTour    = tourName || '';
   currentPrice   = parseInt((price || '0').replace(/[^\d]/g,'')) || 0;
   currentTourId  = tourId || '';
@@ -60,7 +69,6 @@ function openBookingModal(tourName, price, tourId) {
   switchBookingType('personal');
 
   // Auto-fill thông tin user
-  const u = loadUser();
   if (u) {
     if (document.getElementById('mName'))  document.getElementById('mName').value  = u.name  || '';
     if (document.getElementById('mPhone')) document.getElementById('mPhone').value = u.phone || '';
